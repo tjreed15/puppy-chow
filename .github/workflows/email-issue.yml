@@ -1,0 +1,57 @@
+name: Email new issue
+
+# Fires when the monthly run pushes a new docs/YYYY-MM/ issue to main.
+on:
+  push:
+    branches: [main]
+    paths: ["docs/*/index.html"]
+  workflow_dispatch:
+    inputs:
+      issue_dir:
+        description: "Issue folder to (re)send, e.g. docs/2026-10"
+        required: true
+
+jobs:
+  email:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Find the new issue
+        id: issue
+        env:
+          INPUT_DIR: ${{ inputs.issue_dir }}
+        run: |
+          if [ -n "$INPUT_DIR" ]; then
+            [[ "$INPUT_DIR" =~ ^docs/[0-9]{4}-[0-9]{2}$ ]] || { echo "Bad issue_dir: $INPUT_DIR"; exit 1; }
+            echo "dir=$INPUT_DIR" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          # Only email when an issue page was ADDED, not when one was edited.
+          dir=$(git diff --name-only --diff-filter=A HEAD~1 HEAD | grep -E '^docs/[0-9]{4}-[0-9]{2}/index\.html$' | head -1 | xargs -r dirname)
+          echo "dir=$dir" >> "$GITHUB_OUTPUT"
+
+      - name: Wait for GitHub Pages to serve it
+        if: steps.issue.outputs.dir != ''
+        env:
+          PAGES_URL: ${{ vars.PAGES_URL }}
+          ISSUE_DIR: ${{ steps.issue.outputs.dir }}
+        run: |
+          url="${PAGES_URL%/}/${ISSUE_DIR#docs/}/"
+          for i in $(seq 1 30); do
+            code=$(curl -s -o /dev/null -w '%{http_code}' "$url")
+            [ "$code" = "200" ] && echo "Live: $url" && exit 0
+            sleep 20
+          done
+          echo "Page not live after 10 minutes: $url"; exit 1
+
+      - name: Send email
+        if: steps.issue.outputs.dir != ''
+        env:
+          ISSUE_DIR: ${{ steps.issue.outputs.dir }}
+          PAGES_URL: ${{ vars.PAGES_URL }}
+          GMAIL_USER: ${{ secrets.GMAIL_USER }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          MAIL_TO: ${{ secrets.MAIL_TO }}
+        run: python3 scripts/send_issue_email.py

@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Puppy Chow No. 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Public+Sans:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: single reading column; each item is a "kennel card" — chips for evidence metadata, a bias box, an "on the floor" line. */
+:root{
+  --bg:#f3f5f2; --surface:#ffffff; --ink:#1b2622; --muted:#5a6863; --rule:#d6ddd8;
+  --accent:#1d6b55; --accent-soft:#e1efe9; --warn:#8a5a00; --warn-soft:#fbf1dc;
+  --display:"Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+  --body:"Public Sans", "Helvetica Neue", Arial, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#121815; --surface:#1a221e; --ink:#e3ebe6; --muted:#9aa9a2; --rule:#2c3833;
+    --accent:#6fcfae; --accent-soft:#1f3a31; --warn:#f0c46a; --warn-soft:#3a2f17; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121815; --surface:#1a221e; --ink:#e3ebe6; --muted:#9aa9a2; --rule:#2c3833;
+  --accent:#6fcfae; --accent-soft:#1f3a31; --warn:#f0c46a; --warn-soft:#3a2f17; color-scheme:dark;
+}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 var(--body);
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:0 64px}
+.wrap{max-width:46rem;margin:0 auto}
+a{color:var(--accent);text-underline-offset:2px}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
+header{padding-block:48px 28px;border-bottom:2px solid var(--ink)}
+.mast{font:500 13px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:flex;flex-wrap:wrap;gap:8px 20px}
+h1{font:700 clamp(2.4rem,7vw,3.6rem)/1 var(--display);letter-spacing:-.02em;margin:14px 0 10px;text-wrap:balance}
+.dek{color:var(--muted);max-width:38rem;margin:0}
+h2{font:700 1.6rem/1.15 var(--display);margin:56px 0 6px;text-wrap:balance}
+.sec-note{color:var(--muted);margin:0 0 20px;font-size:.95rem}
+h3{font:600 1.12rem/1.3 var(--body);margin:0;text-wrap:balance}
+.tldr{margin-top:28px;display:grid;gap:12px}
+.tldr li{list-style:none;padding:14px 16px;background:var(--surface);border:1px solid var(--rule);border-radius:6px}
+.tldr ol{padding:0;margin:0;display:grid;gap:10px}
+.tldr b{font-family:var(--display);font-weight:700}
+.items{display:grid;gap:20px}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:6px;padding:20px;display:grid;gap:12px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:500 12px/1 var(--mono);padding:5px 8px;border-radius:3px;background:var(--accent-soft);color:var(--ink);font-variant-numeric:tabular-nums}
+.chip.out{background:var(--warn-soft);color:var(--warn)}
+.card p{margin:0}
+blockquote{margin:0;padding-left:12px;border-left:2px solid var(--rule);color:var(--muted);font-style:italic}
+.salt{background:var(--warn-soft);border-radius:4px;padding:10px 12px;font-size:.93rem}
+.salt::before{content:"Grain of salt";display:block;font:500 11px/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--warn);margin-bottom:2px}
+.floor{border-top:1px dashed var(--rule);padding-top:10px}
+.floor::before{content:"On the floor";display:block;font:500 11px/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:2px}
+.src{font:400 13px/1.5 var(--mono);color:var(--muted);word-break:break-word}
+.context{margin-top:24px;border:1px dashed var(--rule);border-radius:6px;padding:16px 20px}
+.context h4{font:500 12px/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--warn);margin:0 0 10px}
+.context ul{margin:0;padding-left:18px;display:grid;gap:10px}
+footer{margin-top:56px;padding-top:20px;border-top:2px solid var(--ink);font-size:.92rem;color:var(--muted)}
+footer h2{margin-top:0;font-size:1.2rem;color:var(--ink)}
+footer ul{padding-left:18px;display:grid;gap:6px}
+@media (max-width:480px){.card{padding:16px}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+<header>
+  <div class="mast"><span>Issue No. 1</span><span>Sept 15 – Oct 15, 2026</span><span>San Diego</span></div>
+  <h1>Puppy Chow</h1>
+  <p class="dek">New dog behavior research, California law, and San Diego shelter news, written for the people working the kennels. Every claim links to the page it came from.</p>
+</header>
+
+<section class="tldr" aria-label="Top three">
+  <ol>
+    <li><b>SDHS is at 164% of dog capacity.</b> That is San Diego Humane Society's own figure from Oct 14. Axios called the dog crowding a record high on Sept 22. <a href="https://sdhumane.org/sdhs-welcomes-kauai-cats-following-hurricane-lowell-to-support-shelter-partner-in-need/">SDHS</a> · <a href="https://www.axios.com/local/san-diego/2026/09/22/san-diego-dog-shelter-overcrowding-vet-costs-pet-rent">Axios</a></li>
+    <li><b>AB 2344 was signed Sept 27.</b> Animals seized under any California law can now go through the 14-day abandonment process, so evidence and cruelty-case dogs may spend less time in limbo. It takes effect Jan 1, 2027. <a href="https://leginfo.legislature.ca.gov/faces/billStatusClient.xhtml?bill_id=202520260AB2344">leginfo</a></li>
+    <li><b>Trazodone before neuter cut stress behaviors in shelter dogs. Gabapentin alone did not.</b> This is a small randomized trial published in JAVMA on Oct 9. <a href="https://doi.org/10.2460/javma.26.05.0384">JAVMA</a></li>
+  </ol>
+</section>
+
+<section aria-labelledby="research">
+  <h2 id="research">Research</h2>
+  <p class="sec-note">Papers first published online between Sept 15 and Oct 15. Each one has notes on its limits. All four are summarized from their abstracts; no full texts were read.</p>
+  <div class="items">
+
+    <article class="card">
+      <div class="chips"><span class="chip">RCT</span><span class="chip">n = 60</span><span class="chip">Shelter dogs</span><span class="chip">JAVMA · Oct 9</span><span class="chip">Abstract only</span></div>
+      <h3>Trazodone, with or without gabapentin, reduced stress-related behaviors in shelter dogs</h3>
+      <p>Delabar et al. randomized shelter dogs to four groups before surgical neuter: trazodone (8 mg/kg), gabapentin (25 mg/kg), both drugs, or neither. Each dog got a dose the evening before and the morning of surgery. Blinded observers scored 15 stress-related behaviors (13 made the final analysis) from short videos taken with and without a person present.</p>
+      <blockquote>“the trazodone and combination groups had a significant reduction in mean behavior score … and the gabapentin group had an increase in mean behavior score.”</blockquote>
+      <p class="salt">60 dogs across 4 groups works out to roughly 15 per group. The abstract reports no effect sizes. Each observation was a 1-minute clip, and the setting is the pre-surgery window only. Enrollment ended in 2021, five years before publication. No funding or conflict-of-interest statement is visible in the record.</p>
+      <p class="floor">If your vet team already gives trazodone before surgery, this supports it for visible stress around the procedure. It doesn't show that gabapentin alone helps, and it says nothing about stress over a long kennel stay.</p>
+      <p class="src"><a href="https://doi.org/10.2460/javma.26.05.0384">doi.org/10.2460/javma.26.05.0384</a> · PMID 42854722</p>
+    </article>
+
+    <article class="card">
+      <div class="chips"><span class="chip">Theory / review</span><span class="chip">No sample</span><span class="chip">Front. Psychol. · Sept 22</span><span class="chip">Open access · abstract read</span></div>
+      <h3>A proposed shared vocabulary for fear vs. frustration</h3>
+      <p>Wilson, Soulsbury, and Mills (University of Lincoln) review the clinical animal-behavior literature and propose functional definitions of fear and frustration, using dogs as the model species.</p>
+      <blockquote>“Our proposed definitions for fear and frustration structure and unite existing theories”</blockquote>
+      <p class="salt">This is a conceptual paper and hasn't been tested. The abstract doesn't describe a systematic search. It isn't specific to shelters. The authors declare no competing interests.</p>
+      <p class="floor">Useful when your team is arguing over whether a barrier-reactive dog is scared or frustrated. It gives you shared language, not evidence about which intervention works.</p>
+      <p class="src"><a href="https://doi.org/10.3389/fpsyg.2026.1888439">doi.org/10.3389/fpsyg.2026.1888439</a> · PMID 42839936</p>
+    </article>
+
+    <article class="card">
+      <div class="chips"><span class="chip">Registry data</span><span class="chip">n = 2,252 dogs</span><span class="chip">18 shelters, Italy</span><span class="chip">Vet. Italiana · Oct 8</span><span class="chip">Abstract only</span></div>
+      <h3>Older dogs had much lower odds of adoption in Italian shelters</h3>
+      <p>Corsi et al. analyzed national-database records for dogs admitted to 18 shelters in Abruzzo during 2023–24.</p>
+      <blockquote>“lower odds of adoption for animals aged 1-2 years (OR = 0.53) and over 2 years (OR = 0.31)”</blockquote>
+      <p>The regional adoption rate rose from 45% to 49.6%, and average length of stay fell from 104 to 94 days.</p>
+      <p class="salt">This is descriptive registry data from Italian shelters (8 private, 10 public), so applying it to US open-admission shelters is a stretch. The abstract doesn't name the age group the odds ratios are compared against. It includes no behavior data, and no funding statement is visible.</p>
+      <p class="floor">It's another data point for putting your marketing and enrichment effort behind adult dogs. How well it applies to US shelters is unknown.</p>
+      <p class="src"><a href="https://doi.org/10.12834/VetIt.4049.41768.2">doi.org/10.12834/VetIt.4049.41768.2</a> · PMID 42864983</p>
+    </article>
+
+    <article class="card">
+      <div class="chips"><span class="chip">Owner survey</span><span class="chip">n = 789</span><span class="chip">Dogs 8+ yrs</span><span class="chip">Prev. Vet. Med. · Sept 18</span><span class="chip">Abstract only</span></div>
+      <h3>In senior dogs, touch sensitivity and unprompted vocalizing were linked to poorer quality of life</h3>
+      <p>Kottferová et al. surveyed owners of older dogs online. Increased response to touch and vocalizing with no apparent trigger were each independently associated with poorer quality of life as owners perceived it. The number of health conditions was not. Better mobility was associated with lower odds of poorer quality of life.</p>
+      <blockquote>“Multivariable ordinal regression analyses showed that increased response to tactile stimulation …”</blockquote>
+      <p class="salt">The data are cross-sectional and owner-reported, and the respondents selected themselves online. The links are associations, not causes, and the authors say so. They declare no competing interests.</p>
+      <p class="floor">With senior surrenders, new touch sensitivity or vocalizing out of nowhere is a reasonable cue to ask for a pain workup before treating it as a behavior problem. Treat this as a hypothesis, not a protocol.</p>
+      <p class="src"><a href="https://doi.org/10.1016/j.prevetmed.2026.107021">doi.org/10.1016/j.prevetmed.2026.107021</a> · PMID 42766958</p>
+    </article>
+  </div>
+
+  <div class="context">
+    <h4>Just missed the window (published before Sept 15)</h4>
+    <ul>
+      <li><b>Combined enrichment and medication reduced arousal in shelter dogs.</b> Cisneros et al. ran a randomized trial with 50 dogs at one Texas municipal shelter. It used gabapentin plus trazodone, with or without calm enrichment. The authors report <i>“Longer stays were associated with more alert behavior (p = 0.001).”</i> Front. Vet. Sci., Sept 3. It's a single shelter with about 10 dogs per group, and funding wasn't checked. <a href="https://doi.org/10.3389/fvets.2026.1931203">doi</a></li>
+      <li><b>A review on rethinking shelter behavior assessments.</b> Breithaupt et al. argue that most shelter assessments are temperament tests, and that <i>“There remains a need for a validated behavior assessment that measures coping ability in a clinically meaningful way.”</i> Animals, Sept 8. Review article. <a href="https://doi.org/10.3390/ani16182820">doi</a></li>
+    </ul>
+  </div>
+</section>
+
+<section aria-labelledby="law">
+  <h2 id="law">California law</h2>
+  <p class="sec-note">The governor's deadline to sign or veto was Sept 30. Each status below was checked on leginfo. I found no dog or shelter veto in the signing lists I read; the footer lists which ones those were.</p>
+  <div class="items">
+
+    <article class="card">
+      <div class="chips"><span class="chip">Signed Sept 27</span><span class="chip">Ch. 599</span><span class="chip">Effective Jan 1, 2027</span><span class="chip">Final vote 79–0</span></div>
+      <h3>AB 2344 (Haney): faster path out of the kennel for seized animals</h3>
+      <p>Under existing law, an owner who doesn't pay care costs and reclaim the animal within 14 days of notice is deemed to have abandoned it. That rule applied to certain seizures and seizures under warrant. AB 2344 extends it to every lawful seizure:</p>
+      <blockquote>“This bill would make those provisions apply to animals seized pursuant to any provision of California law.”</blockquote>
+      <p class="salt">The coverage I found quotes the bill's author and sponsors, the LA County DA's office and Social Compassion in Legislation. I found no independent analysis. Contra Costa News says San Diego Humane Society supported the bill, and the Spokesman-Review reports no opposition. Dates: the Spokesman-Review says the bill was signed on Friday, Sept 25, while leginfo records approval on Sept 27, the same day it was chaptered. I used the leginfo date.</p>
+      <p class="floor">Evidence and cruelty-case dogs, the ones who decline over months of holding, may reach foster, behavior work, and adoption sooner starting in January.</p>
+      <p class="src"><a href="https://leginfo.legislature.ca.gov/faces/billStatusClient.xhtml?bill_id=202520260AB2344">leginfo AB 2344</a> · <a href="https://contracosta.news/2026/10/03/governor-signs-bill-to-get-abused-animals-out-of-shelters-and-into-safe-homes-faster/">Contra Costa News</a> · <a href="https://www.spokesman.com/stories/2026/sep/26/newsom-signs-bill-that-seeks-to-help-abused-dogs-a/">Spokesman-Review</a></p>
+    </article>
+
+    <article class="card">
+      <div class="chips"><span class="chip">Signed Sept 18</span><span class="chip">Ch. 284</span><span class="chip">Expected Jan 1, 2027</span></div>
+      <h3>AB 2010 (Soria): high-volume spay/neuter no longer needs a separate surgical room</h3>
+      <blockquote>“This bill would specify that high-volume spay or neuter services, as defined, shall not be required to be performed in a separate surgical room.”</blockquote>
+      <p class="salt">The only commentary I could open was SF SPCA's advocacy recap, which frames the bill as a fix for overcrowding. I found no independent estimate of how much clinic capacity the change will add.</p>
+      <p class="floor">This affects the pipeline indirectly. More spay/neuter capacity means fewer litters coming in, and adopted dogs can be altered faster.</p>
+      <p class="src"><a href="https://leginfo.legislature.ca.gov/faces/billStatusClient.xhtml?bill_id=202520260AB2010">leginfo AB 2010</a> · <a href="https://www.sfspca.org/blog/advocacy-day-2026-recap/">SF SPCA recap</a></p>
+    </article>
+
+    <article class="card">
+      <div class="chips"><span class="chip">Signed Sept 30</span><span class="chip">Ch. 1025</span><span class="chip out">Operative Apr 1, 2027</span></div>
+      <h3>SB 1296 (Durazo): landlords must publish their pet policy up front</h3>
+      <p>Landlords need a written pet policy that is shown in listings and handed over with rental applications. If an applicant pays a fee and then can't rent because the policy wasn't disclosed, the landlord must refund the fee on request. Multifamily Executive reports the refund is due within seven business days of written notice.</p>
+      <blockquote>“The law, however, doesn't dictate pet policies or require housing providers to accept pets.”</blockquote>
+      <p class="salt">Don't oversell this one. It requires disclosure only. It doesn't give tenants a right to keep a dog or require landlords to accept pets, as the quote above (from Multifamily Executive) says.</p>
+      <p class="floor">Adopters can check a rental's pet rules before they apply. That may head off some returns when people move.</p>
+      <p class="src"><a href="https://leginfo.legislature.ca.gov/faces/billTextClient.xhtml?bill_id=202520260SB1296">leginfo SB 1296</a> · <a href="https://www.multifamilyexecutive.com/property-management/california-enacts-pet-policy-transparency-law-rental-housing">Multifamily Executive</a></p>
+    </article>
+  </div>
+
+  <div class="context">
+    <h4>Context: just outside the window or not passed</h4>
+    <ul>
+      <li><b>AB 1999 (Kalra), signed Sept 14.</b> It creates a shelter-only license for vets licensed out of state, adds retired and volunteer vet statuses, and rewrites the vet-client-patient relationship rules, including telemedicine. Takes effect Jan 1, 2027. SDHS was a co-sponsor. <a href="https://leginfo.legislature.ca.gov/faces/billStatusClient.xhtml?bill_id=202520260AB1999">leginfo</a> · <a href="https://www.dvm360.com/view/new-california-law-changes-vcpr-rules-and-expands-licensing-options-for-veterinarians">dvm360</a></li>
+      <li><b>AB 2574 (Alanis), hearings for potentially dangerous and vicious dogs.</b> Held in committee, so it is not law. <a href="https://cvma.net/advocacy/legislative-issues/2026-legislative-update">CVMA bill chart</a></li>
+      <li><b>Coming next session:</b> a working group led by CalAnimals has proposed a state bureau of companion animals. This comes only from an American Kennel Club legislative alert and isn't confirmed elsewhere. <a href="https://www.akc.org/legislative-alerts/california-bureau-of-companion-animals-proposed/">AKC alert, Aug 25</a></li>
+    </ul>
+  </div>
+</section>
+
+<section aria-labelledby="local">
+  <h2 id="local">San Diego</h2>
+  <p class="sec-note">No city or county animal ordinances, disease outbreaks, or trainer events turned up in this window.</p>
+  <div class="items">
+
+    <article class="card">
+      <div class="chips"><span class="chip">SDHS press release</span><span class="chip">Oct 14</span></div>
+      <h3>SDHS at 164% dog capacity while taking in hurricane-displaced cats</h3>
+      <p>San Diego Humane Society brought 19 cats from Kaua'i Humane Society after Hurricane Lowell, with 20 more on the way. The same release puts SDHS at 164% of dog capacity and 86% of cat capacity, and asks the public to adopt, foster, or donate.</p>
+      <blockquote>“Adoptions are completed in person on a first-come, first-served basis and holds cannot be placed over the phone.”</blockquote>
+      <p class="salt">This is the organization's own release, and it asks for adoptions, fosters, and donations. The capacity numbers are self-reported.</p>
+      <p class="floor">With dog kennels this far over capacity, foster coaching, post-adoption support, and decompression plans are likely where trainer hours do the most good.</p>
+      <p class="src"><a href="https://sdhumane.org/sdhs-welcomes-kauai-cats-following-hurricane-lowell-to-support-shelter-partner-in-need/">sdhumane.org</a></p>
+    </article>
+
+    <article class="card">
+      <div class="chips"><span class="chip">Axios San Diego</span><span class="chip">Sept 22</span><span class="chip out">Partly readable</span></div>
+      <h3>Dog crowding at SDHS hits a record high</h3>
+      <blockquote>“A combination of unspayed and unneutered dogs bought during COVID, rising veterinary costs and a challenging economy means more dogs are going in at the San Diego Humane Society than are coming out via adoption.”</blockquote>
+      <p class="salt">Only the summary paragraph was readable, and the specific intake numbers in the article were not. CBS 8 ran a similar record-intake story the same day, but its page blocked automated reading, so none of its figures appear here.</p>
+      <p class="src"><a href="https://www.axios.com/local/san-diego/2026/09/22/san-diego-dog-shelter-overcrowding-vet-costs-pet-rent">axios.com</a> · <a href="https://www.cbs8.com/article/news/local/san-diego-humane-society-record-dog-intake-costs-evictions/509-cf370043-9237-4589-a8e6-dce406cfa2e1">cbs8.com (not verified)</a></p>
+    </article>
+
+    <article class="card">
+      <div class="chips"><span class="chip">Axios San Diego</span><span class="chip">Sept 23</span><span class="chip out">Partly readable</span></div>
+      <h3>Off-leash rules at school fields are already causing closures</h3>
+      <p>The article's page title is “San Diego tests color-coded dog waste rules at school fields.” Off-leash dogs at school fields now run on an honor system:</p>
+      <blockquote>“The plan's honor system (put in place after the city cut Humane Society enforcement) is meant to allow pooches to run free while kids enjoy clean fields during the school day. But already, owners aren't picking up their dog poop, and it's leading to field closures.”</blockquote>
+      <p class="salt">Short item, and only the summary paragraph was readable. Axios doesn't say here what the enforcement cut involved.</p>
+      <p class="floor">Adopters asking where they can take a dog off leash may find school fields closed. A good time to mention leash-optional alternatives and recall training.</p>
+      <p class="src"><a href="https://www.axios.com/local/san-diego/2026/09/23/off-leash-dogs-school-fields-red-yellow-green-closures">axios.com</a></p>
+    </article>
+
+    <article class="card">
+      <div class="chips"><span class="chip">Hoodline</span><span class="chip">Sept 18</span></div>
+      <h3>The county's $37M Santee shelter is still under construction</h3>
+      <p>The roughly 23,000 sq ft County Animal Services shelter will replace the aging Bonita facility for East and South County. It will also serve as a regional hub for disaster deployment and intake. No opening date was given.</p>
+      <blockquote>“County officials deemed the Bonita facility structurally outdated”</blockquote>
+      <p class="salt">This is secondary reporting; the article cites KPBS for its capacity figures. It gives no kennel count or opening timeline.</p>
+      <p class="floor">There's no opening date yet, so county intake from East and South County still goes through Bonita.</p>
+      <p class="src"><a href="https://hoodline.com/2026/09/new-santee-animal-shelter-under-construction/">hoodline.com</a></p>
+    </article>
+  </div>
+
+  <div class="context">
+    <h4>Context: before the window</h4>
+    <ul>
+      <li><b>KPBS, Aug 26:</b> SDHS was at 171% of dog capacity. Average dog stays were up 28% year over year, to 59 days. The 23 Chihuahuas from an Imperial Beach eviction <i>“will need thorough medical and behavioral evaluation before they can be made available for adoption.”</i> <a href="https://www.kpbs.org/news/quality-of-life/2026/08/26/humane-society-at-171-capacity-for-dogs-asks-for-help-from-the-public">kpbs.org</a></li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  <h2>How this issue was made</h2>
+  <ul>
+    <li>Research came from PubMed searches limited to Sept 15 – Oct 15, 2026. Journals that PubMed indexes slowly may be missing: Applied Animal Behaviour Science, Journal of Veterinary Behavior, Animal Cognition, and the IAABC Journal. Their own sites were not checked this month.</li>
+    <li>Law: I read the governor's signing lists for Sept 14, 18, 20, 27, and 30, and checked each bill's status on leginfo. Some lists from Sept 21–29 were not read in full, so a pet-evacuation clause in the wildfire package can't be ruled out.</li>
+    <li>Local: I searched SDHS, the County, KPBS, NBC 7, Axios, CBS 8, Times of San Diego, and Hoodline. Rancho Coastal, Helen Woodward, PAWS of Coronado, Chula Vista, and Escondido Humane turned up nothing in the window.</li>
+    <li>Stance: this newsletter doesn't take a side on training methods. It reports what each source says and flags who is saying it.</li>
+  </ul>
+</footer>
+</div>
+</body>
+</html>
