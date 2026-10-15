@@ -11,6 +11,7 @@ Reference example of a finished issue: `docs/2026-10/index.html`. Match its stru
 - Exception: issue No. 1 covered Sept 15 – Oct 15, 2026. Issue No. 2 covers **Oct 16 – Nov 30, 2026** so nothing falls in a gap.
 - If `docs/YYYY-MM/` already exists, stop: this month is done.
 - Read the previous issue so you don't repeat a story unless there's a real new development (then say what's new).
+- If you find that a previous issue said something that was wrong or is now outdated, add a short "Correction" line to the new issue's relevant section (what the old issue said, what's right, link to the source). Don't edit past issues; corrections to published issues are made by hand.
 
 ## 1. Reader and stance
 
@@ -25,6 +26,7 @@ Reference example of a finished issue: `docs/2026-10/index.html`. Match its stru
 - Quotes are verbatim, inside quotation marks, and appear on the linked page. Don't put a period inside a quote that continues in the source.
 - Never report from memory or from search-result snippets alone. If you can only see a headline, say "only the headline/summary was readable" and use nothing beyond it.
 - If sources conflict (e.g. press date vs. leginfo date), use the primary source and note the conflict in one line.
+- Prefer the primary source. For any agency, shelter, or government item found through news coverage, also check that organization's own newsroom (e.g. countynewscenter.com, sdhumane.org, gov.ca.gov) for a newer or more specific statement before writing the card. Issue No. 1 missed the County's own Santee opening date by relying on a secondary article.
 - Never pad. A thin section says "nothing found" plus what was checked.
 - Never bypass a CAPTCHA, bot check, login, or paywall. Log the blocked URL in the footer.
 - Anything published outside the window goes only in a clearly labeled "Just missed" / "Context" box, max 2–3 per section.
