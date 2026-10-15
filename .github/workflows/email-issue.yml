@@ -10,6 +10,12 @@ on:
       issue_dir:
         description: "Issue folder to (re)send, e.g. docs/2026-10"
         required: true
+  # Called by monthly-issue.yml (pushes made with the workflow token don't fire `push`).
+  workflow_call:
+    inputs:
+      issue_dir:
+        type: string
+        required: true
 
 jobs:
   email:

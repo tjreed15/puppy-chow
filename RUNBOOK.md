@@ -66,21 +66,15 @@ Dispatch one subagent with only: the draft path, sections 1–2 of this file, an
 
 Fix every "must fix" item by correcting it or cutting it. Never soften a claim into vagueness to keep it; cut it. If more than 3 must-fix items were found, run the critic once more on the fixed draft.
 
-## 6. Publish
+## 6. Publish and deliver (handled by the workflow)
 
-```
-git add docs/
-git commit -m "Issue No. N — <Month YYYY>"
-git push origin HEAD:main
-```
+Don't run git and don't send email. When you finish, the `Monthly issue` workflow (`.github/workflows/monthly-issue.yml`) commits `docs/`, pushes to `main`, rebuilds GitHub Pages (`https://tjreed15.github.io/puppy-chow/`), and calls `email-issue.yml`, which waits for the page to go live and emails the subscriber list from the personal Gmail account. Recipients live in a repo secret, never in this public repo.
 
-Push directly to `main` (GitHub Pages serves `main:/docs`). Then confirm the page is live: poll `https://tjreed15.github.io/puppy-chow/YYYY-MM/` with curl every 30s for up to 10 minutes until it returns 200.
+The workflow refuses to publish if `docs/index.html` wasn't updated, so don't skip that step in section 4.
 
-## 7. Deliver
+## 7. Dry runs and window overrides
 
-Don't send any email yourself. Pushing a new `docs/YYYY-MM/index.html` to `main` triggers the `Email new issue` GitHub workflow (`.github/workflows/email-issue.yml`), which waits for the page to go live and emails the subscriber list from the personal Gmail account. Recipients are kept in a repo secret, never in this public repo.
-
-To confirm delivery, check the workflow's run with `gh run list --workflow email-issue.yml --limit 1` if `gh` is available; otherwise note in the summary that delivery is handled by the workflow.
+The prompt may include a window override (use those dates instead of section 0's) or say DRY RUN (write to `docs/preview/index.html`, leave `docs/index.html` alone). Follow the prompt.
 
 ## 8. Finish
 

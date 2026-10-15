@@ -1,0 +1,99 @@
+name: Monthly issue
+
+# Claude writes the issue (following RUNBOOK.md); this workflow commits it, rebuilds
+# Pages, and hands off to email-issue.yml. Claude never gets a GitHub token.
+on:
+  schedule:
+    # 2nd of each month, 17:07 UTC = 9:07 PST / 10:07 PDT.
+    - cron: "7 17 2 * *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Preview only: write docs/preview/, upload it as a run artifact, no commit, no email"
+        type: boolean
+        default: true
+      window_start:
+        description: "Override window start (YYYY-MM-DD). Leave blank for the previous calendar month."
+        required: false
+      window_end:
+        description: "Override window end (YYYY-MM-DD)"
+        required: false
+
+concurrency:
+  group: monthly-issue
+  cancel-in-progress: false
+
+jobs:
+  write:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    permissions:
+      contents: write
+      pages: write
+    outputs:
+      issue_dir: ${{ steps.publish.outputs.issue_dir }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install Claude Code
+        run: npm install -g @anthropic-ai/claude-code@2.1.286
+
+      - name: Write the issue
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          DRY_RUN: ${{ inputs.dry_run || 'false' }}
+          WINDOW_START: ${{ inputs.window_start }}
+          WINDOW_END: ${{ inputs.window_end }}
+        run: |
+          prompt="Today is $(date -u +%Y-%m-%d). Produce this month's Puppy Chow issue by following RUNBOOK.md exactly. You are running unattended in GitHub Actions: don't ask questions, and don't run git (the workflow commits for you)."
+          if [ -n "$WINDOW_START" ] && [ -n "$WINDOW_END" ]; then
+            [[ "$WINDOW_START$WINDOW_END" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]] || { echo "Bad window dates"; exit 1; }
+            prompt="$prompt Window override: use $WINDOW_START through $WINDOW_END instead of the previous calendar month."
+          fi
+          if [ "$DRY_RUN" = "true" ]; then
+            prompt="$prompt DRY RUN: write the issue to docs/preview/index.html (ignore the 'folder already exists' stop rule), number it as the next issue, and do not edit docs/index.html."
+          fi
+          claude -p "$prompt" \
+            --allowedTools "Read,Write,Edit,Glob,Grep,WebSearch,WebFetch,Agent,Task,TodoWrite,Bash(curl:*),Bash(python3:*),Bash(date:*),Bash(ls:*),Bash(mkdir:*),Bash(cp:*),Bash(cat:*),Bash(head:*),Bash(grep:*),Bash(sed:*),Bash(wc:*)" \
+            --output-format text | tee claude-summary.txt
+
+      - name: Upload preview
+        if: inputs.dry_run
+        uses: actions/upload-artifact@v4
+        with:
+          name: puppy-chow-preview
+          path: |
+            docs/preview/
+            claude-summary.txt
+
+      - name: Commit, push, and rebuild Pages
+        id: publish
+        if: ${{ !inputs.dry_run }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          dir=$(git status --porcelain --untracked-files=all docs/ | awk '{print $2}' | grep -E '^docs/[0-9]{4}-[0-9]{2}/index\.html$' | head -1 | xargs -r dirname)
+          if [ -z "$dir" ]; then echo "No new issue written; nothing to publish."; exit 0; fi
+          git diff --quiet docs/index.html && { echo "docs/index.html wasn't updated with the new issue"; exit 1; }
+          git config user.name "Puppy Chow"
+          git config user.email "tjreed15@gmail.com"
+          git add docs/
+          git commit -m "Issue: ${dir#docs/}"
+          git push "https://x-access-token:${GH_TOKEN}@github.com/${REPO}.git" HEAD:main
+          gh api -X POST "repos/${REPO}/pages/builds" >/dev/null || echo "Pages build request failed; the push should still trigger one."
+          echo "issue_dir=$dir" >> "$GITHUB_OUTPUT"
+
+  email:
+    needs: write
+    if: needs.write.outputs.issue_dir != ''
+    uses: ./.github/workflows/email-issue.yml
+    with:
+      issue_dir: ${{ needs.write.outputs.issue_dir }}
+    secrets: inherit
