@@ -74,7 +74,7 @@ git commit -m "Issue No. N — <Month YYYY>"
 git push origin HEAD:main
 ```
 
-Push directly to `main` (GitHub Pages serves `main:/docs`). Then confirm the page is live: poll `{{PAGES_URL}}YYYY-MM/` with curl every 30s for up to 10 minutes until it returns 200.
+Push directly to `main` (GitHub Pages serves `main:/docs`). Then confirm the page is live: poll `https://tjreed15.github.io/puppy-chow/YYYY-MM/` with curl every 30s for up to 10 minutes until it returns 200.
 
 ## 7. Deliver
 
