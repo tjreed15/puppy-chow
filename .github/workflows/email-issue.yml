@@ -23,6 +23,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          # When called from monthly-issue.yml, the new issue was pushed after this run started.
+          ref: main
           fetch-depth: 2
 
       - name: Find the new issue
