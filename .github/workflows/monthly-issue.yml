@@ -24,14 +24,12 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # Claude runs here with no GitHub write access. Only the issue HTML leaves this job.
   write:
     runs-on: ubuntu-latest
     timeout-minutes: 120
     permissions:
-      contents: write
-      pages: write
-    outputs:
-      issue_dir: ${{ steps.publish.outputs.issue_dir }}
+      contents: read
     steps:
       - uses: actions/checkout@v4
         with:
@@ -60,40 +58,71 @@ jobs:
             prompt="$prompt DRY RUN: write the issue to docs/preview/index.html (ignore the 'folder already exists' stop rule), number it as the next issue, and do not edit docs/index.html."
           fi
           claude -p "$prompt" \
-            --allowedTools "Read,Write,Edit,Glob,Grep,WebSearch,WebFetch,Agent,Task,TodoWrite,Bash(curl:*),Bash(python3:*),Bash(date:*),Bash(ls:*),Bash(mkdir:*),Bash(cp:*),Bash(cat:*),Bash(head:*),Bash(grep:*),Bash(sed:*),Bash(wc:*)" \
+            --allowedTools "Read,Write,Edit,Glob,Grep,WebSearch,WebFetch,Agent,Task,TodoWrite,Bash(curl:*),Bash(date:*),Bash(ls:*),Bash(mkdir:*),Bash(cp:*),Bash(cat:*),Bash(head:*),Bash(grep:*),Bash(wc:*)" \
             --output-format text | tee claude-summary.txt
 
-      - name: Upload preview
-        if: inputs.dry_run
-        uses: actions/upload-artifact@v4
+      - name: Collect output
+        run: |
+          mkdir -p out
+          cp claude-summary.txt out/
+          if [ -f docs/preview/index.html ]; then mkdir -p out/preview && cp docs/preview/index.html out/preview/; fi
+          for f in $(git status --porcelain --untracked-files=all docs/ | awk '{print $2}' | grep -E '^docs/[0-9]{4}-[0-9]{2}/index\.html$'); do
+            mkdir -p "out/$(dirname "$f")" && cp "$f" "out/$f"
+          done
+          git diff --quiet docs/index.html || { mkdir -p out/docs && cp docs/index.html out/docs/index.html; }
+          find out -type f
+
+      - uses: actions/upload-artifact@v4
         with:
-          name: puppy-chow-preview
-          path: |
-            docs/preview/
-            claude-summary.txt
+          name: puppy-chow-output
+          path: out/
+
+  # Fresh checkout; copies in only the validated issue files, then pushes.
+  publish:
+    needs: write
+    if: ${{ !inputs.dry_run }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pages: write
+    outputs:
+      issue_dir: ${{ steps.publish.outputs.issue_dir }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: puppy-chow-output
+          path: ${{ runner.temp }}/out
 
       - name: Commit, push, and rebuild Pages
         id: publish
-        if: ${{ !inputs.dry_run }}
         env:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
+          OUT: ${{ runner.temp }}/out
         run: |
-          dir=$(git status --porcelain --untracked-files=all docs/ | awk '{print $2}' | grep -E '^docs/[0-9]{4}-[0-9]{2}/index\.html$' | head -1 | xargs -r dirname)
-          if [ -z "$dir" ]; then echo "No new issue written; nothing to publish."; exit 0; fi
-          git diff --quiet docs/index.html && { echo "docs/index.html wasn't updated with the new issue"; exit 1; }
-          git config user.name "Puppy Chow"
-          git config user.email "tjreed15@gmail.com"
-          git add docs/
-          git commit -m "Issue: ${dir#docs/}"
-          git push "https://x-access-token:${GH_TOKEN}@github.com/${REPO}.git" HEAD:main
+          issues=$(cd "$OUT" && find docs -type f -path 'docs/*/index.html' 2>/dev/null | grep -E '^docs/[0-9]{4}-[0-9]{2}/index\.html$' || true)
+          if [ -z "$issues" ]; then echo "No new issue written; nothing to publish."; exit 0; fi
+          [ "$(echo "$issues" | wc -l)" -eq 1 ] || { echo "Expected one new issue, got: $issues"; exit 1; }
+          [ -f "$OUT/docs/index.html" ] || { echo "docs/index.html wasn't updated with the new issue"; exit 1; }
+          dir=$(dirname "$issues")
+          [ ! -e "$dir" ] || { echo "$dir already exists on main"; exit 1; }
+          mkdir -p "$dir"
+          cp "$OUT/$issues" "$issues"
+          cp "$OUT/docs/index.html" docs/index.html
+          git -c core.hooksPath=/dev/null -c user.name="Puppy Chow" -c user.email="tjreed15@gmail.com" add docs/
+          git -c core.hooksPath=/dev/null -c user.name="Puppy Chow" -c user.email="tjreed15@gmail.com" commit -m "Issue: ${dir#docs/}"
+          git -c core.hooksPath=/dev/null push "https://x-access-token:${GH_TOKEN}@github.com/${REPO}.git" HEAD:main
           gh api -X POST "repos/${REPO}/pages/builds" >/dev/null || echo "Pages build request failed; the push should still trigger one."
           echo "issue_dir=$dir" >> "$GITHUB_OUTPUT"
 
   email:
-    needs: write
-    if: needs.write.outputs.issue_dir != ''
+    needs: publish
+    if: needs.publish.outputs.issue_dir != ''
     uses: ./.github/workflows/email-issue.yml
     with:
-      issue_dir: ${{ needs.write.outputs.issue_dir }}
+      issue_dir: ${{ needs.publish.outputs.issue_dir }}
     secrets: inherit
