@@ -7,9 +7,10 @@ Reference example of a finished issue: `docs/2026-10/index.html`. Match its stru
 ## 0. Set the window
 
 - Window = the **previous calendar month** (e.g. a run on 2026-12-02 covers 2026-11-01 → 2026-11-30).
-- Issue folder = `docs/YYYY-MM/` for that month. Issue number = previous highest number + 1 (read `docs/index.html`).
-- Exception: issue No. 1 covered Sept 15 – Oct 15, 2026. Issue No. 2 covers **Oct 16 – Nov 30, 2026** so nothing falls in a gap.
-- If `docs/YYYY-MM/` already exists, stop: this month is done.
+- Issue folder = `docs/YYYY-MM/` for the month the run happens in (the publish month), not the month covered. A run on 2026-12-02 writes `docs/2026-12/`. Issue No. 1 (published October 2026) is `docs/2026-10/`.
+- Issue number = previous highest number + 1 (read `docs/index.html`). In the index entry, label the issue by publish month and show the window dates, matching the existing `<li>` format.
+- Exception: issue No. 1 covered Sept 15 – Oct 15, 2026, so issue No. 2 (the 2026-11-02 run) covers **Oct 16 – Oct 31, 2026**. Every later issue covers the previous calendar month.
+- If `docs/YYYY-MM/` for the publish month already exists, stop: this month is done.
 - Read the previous issue so you don't repeat a story unless there's a real new development (then say what's new).
 - If you find that a previous issue said something that was wrong or is now outdated, add a short "Correction" line to the new issue's relevant section (what the old issue said, what's right, link to the source). Don't edit past issues; corrections to published issues are made by hand.
 
