@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Puppy Chow No. 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Public+Sans:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: single reading column; each item is a "kennel card" — chips for evidence metadata, a bias box, an "on the floor" line. */
+:root{
+  --bg:#f3f5f2; --surface:#ffffff; --ink:#1b2622; --muted:#5a6863; --rule:#d6ddd8;
+  --accent:#1d6b55; --accent-soft:#e1efe9; --warn:#8a5a00; --warn-soft:#fbf1dc;
+  --display:"Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+  --body:"Public Sans", "Helvetica Neue", Arial, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#121815; --surface:#1a221e; --ink:#e3ebe6; --muted:#9aa9a2; --rule:#2c3833;
+    --accent:#6fcfae; --accent-soft:#1f3a31; --warn:#f0c46a; --warn-soft:#3a2f17; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121815; --surface:#1a221e; --ink:#e3ebe6; --muted:#9aa9a2; --rule:#2c3833;
+  --accent:#6fcfae; --accent-soft:#1f3a31; --warn:#f0c46a; --warn-soft:#3a2f17; color-scheme:dark;
+}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 var(--body);
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:0 64px}
+.wrap{max-width:46rem;margin:0 auto}
+a{color:var(--accent);text-underline-offset:2px}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
+header{padding-block:48px 28px;border-bottom:2px solid var(--ink)}
+.mast{font:500 13px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:flex;flex-wrap:wrap;gap:8px 20px}
+h1{font:700 clamp(2.4rem,7vw,3.6rem)/1 var(--display);letter-spacing:-.02em;margin:14px 0 10px;text-wrap:balance}
+.dek{color:var(--muted);max-width:38rem;margin:0}
+h2{font:700 1.6rem/1.15 var(--display);margin:56px 0 6px;text-wrap:balance}
+.sec-note{color:var(--muted);margin:0 0 20px;font-size:.95rem}
+h3{font:600 1.12rem/1.3 var(--body);margin:0;text-wrap:balance}
+.tldr{margin-top:28px;display:grid;gap:12px}
+.tldr li{list-style:none;padding:14px 16px;background:var(--surface);border:1px solid var(--rule);border-radius:6px}
+.tldr ol{padding:0;margin:0;display:grid;gap:10px}
+.tldr b{font-family:var(--display);font-weight:700}
+.items{display:grid;gap:20px}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:6px;padding:20px;display:grid;gap:12px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:500 12px/1 var(--mono);padding:5px 8px;border-radius:3px;background:var(--accent-soft);color:var(--ink);font-variant-numeric:tabular-nums}
+.chip.out{background:var(--warn-soft);color:var(--warn)}
+.card p{margin:0}
+blockquote{margin:0;padding-left:12px;border-left:2px solid var(--rule);color:var(--muted);font-style:italic}
+.salt{background:var(--warn-soft);border-radius:4px;padding:10px 12px;font-size:.93rem}
+.salt::before{content:"Grain of salt";display:block;font:500 11px/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--warn);margin-bottom:2px}
+.floor{border-top:1px dashed var(--rule);padding-top:10px}
+.floor::before{content:"On the floor";display:block;font:500 11px/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:2px}
+.src{font:400 13px/1.5 var(--mono);color:var(--muted);word-break:break-word}
+.context{margin-top:24px;border:1px dashed var(--rule);border-radius:6px;padding:16px 20px}
+.context h4{font:500 12px/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--warn);margin:0 0 10px}
+.context ul{margin:0;padding-left:18px;display:grid;gap:10px}
+footer{margin-top:56px;padding-top:20px;border-top:2px solid var(--ink);font-size:.92rem;color:var(--muted)}
+footer h2{margin-top:0;font-size:1.2rem;color:var(--ink)}
+footer ul{padding-left:18px;display:grid;gap:6px}
+@media (max-width:480px){.card{padding:16px}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+<header>
+  <div class="mast"><span>Issue No. 1</span><span>Sept 1 – Sept 30, 2026</span><span>San Diego</span></div>
+  <h1>Puppy Chow</h1>
+  <p class="dek">New dog behavior research, California law, and San Diego shelter news, written for the people working the kennels. Every claim links to the page it came from.</p>
+</header>
+
+<section class="tldr" aria-label="Top three">
+  <ol>
+    <li><b>In a Texas shelter trial, active enrichment, gabapentin plus trazodone, and the two-drug-plus-calm-enrichment arm each had lower post-enrichment arousal scores than baseline.</b> It is small (50 dogs, five arms, one week of treatment). Published Sept 3. <a href="https://doi.org/10.3389/fvets.2026.1931203">Front. Vet. Sci.</a></li>
+    <li><b>AB 1999 creates a shelter veterinarian license.</b> It was signed Sept 14 and also revises vet-client-patient relationship rules. Details come from CalMatters Digital Democracy, because leginfo was blocked. <a href="https://calmatters.digitaldemocracy.org/bills/ca_202520260ab1999">Digital Democracy</a></li>
+    <li><b>A UK interview study reports that caregiver expectations of imported rescue dogs often did not align with reality after arrival.</b> These are perceptions, not measured rates. Published Sept 9. <a href="https://doi.org/10.1371/journal.pone.0343416">PLoS One</a></li>
+  </ol>
+</section>
+
+<section aria-labelledby="research">
+  <h2 id="research">Research</h2>
+  <p class="sec-note">Papers with a publication date between Sept 1 and Sept 30. All are summarized from their PubMed abstracts; no full texts were read. Two of them (Cisneros, Breithaupt) got a one-line mention in No. 0 and get full cards here.</p>
+  <div class="items">
+
+    <article class="card">
+      <div class="chips"><span class="chip">RCT</span><span class="chip">n = 50</span><span class="chip">One Texas municipal shelter</span><span class="chip">Front. Vet. Sci. · Sept 3</span><span class="chip">Open access · abstract read</span></div>
+      <h3>Active enrichment, medication, and the combination all scored lower on arousal than baseline in shelter dogs</h3>
+      <p>Cisneros et al. randomized dogs showing excessive arousal into five arms after a baseline week, then ran one week of treatment. Per the abstract, the baseline group had higher post-enrichment arousal scores than the active-enrichment, pharmaceutical, and pharmaceutical-plus-calm-enrichment groups; the calm-enrichment-only arm isn't listed as different. The combined arm had less lip licking, panting, vocalizing, and jumping than all other treatments.</p>
+      <blockquote>“(4) pharmaceutical (20 mg/kg gabapentin, 6 mg/kg trazodone, 5-min walk 2x/day), and (5) pharmaceutical and calm enrichment (20 mg/kg gabapentin, 6 mg/kg trazodone, 15-min walk 2x/day, 15-min human-animal interaction)”</blockquote>
+      <p class="salt">50 dogs over five arms, at a single shelter, for one week of treatment. The abstract doesn't give per-arm counts or say who scored arousal or whether they were blinded. In the arms above, walk length and human contact differ along with the drugs, so enrichment content and time are mixed together. Trazodone and gabapentin were also the drugs in the Delabar trial covered in <a href="../2026-10/">No. 0</a>, so don't treat the two as independent confirmation of each other. The authors declare no conflicts.</p>
+      <p class="floor">This is a pilot-sized signal that active enrichment, or gabapentin plus trazodone (alone or with calm enrichment), may lower arousal scores in dogs like these. It is not a protocol.</p>
+      <p class="src"><a href="https://doi.org/10.3389/fvets.2026.1931203">doi.org/10.3389/fvets.2026.1931203</a> · <a href="https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&rettype=abstract&retmode=text&id=42755814">PMID 42755814</a></p>
+    </article>
+
+    <article class="card">
+      <div class="chips"><span class="chip">No stated design</span><span class="chip">No sample</span><span class="chip">Animals · Sept 8</span><span class="chip">Open access · abstract read</span></div>
+      <h3>Shelters have temperament tests but no validated tool for how a dog is coping now</h3>
+      <p>Breithaupt and Jacobs (Michigan State University) argue that shelter dogs are staying longer and that stress responses vary by dog. They say behavioral interventions may help and that some dogs could also benefit from medication.</p>
+      <blockquote>“Most shelter behavior assessments focus on temperament testing to predict future behavior at home or identify individuals at risk for aggression, but few exist that can help identify generalized stress related to their current environment.”</blockquote>
+      <p class="salt">The abstract describes no data collection or systematic search, so it's an argument, not a finding. The authors declare no conflicts of interest.</p>
+      <p class="floor">The authors say a validated assessment of current coping is needed. The paper gives you a framing, not a tool.</p>
+      <p class="src"><a href="https://doi.org/10.3390/ani16182820">doi.org/10.3390/ani16182820</a> · <a href="https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&rettype=abstract&retmode=text&id=42791675">PMID 42791675</a></p>
+    </article>
+
+    <article class="card">
+      <div class="chips"><span class="chip">Qualitative</span><span class="chip">n = 54 + 18 forum threads</span><span class="chip">UK stakeholders</span><span class="chip">PLoS One · Sept 9</span><span class="chip">Open access · abstract read</span></div>
+      <h3>UK stakeholders say imported rescue dogs often didn't match adopter expectations</h3>
+      <p>Wallis et al. interviewed or ran focus groups with overseas and UK rescue representatives, trainers, transporters, vets, officials, fosterers, and owners.</p>
+      <blockquote>“Overall, caregiver expectations often did not align with reality after the dog arrived, leading to costly surprises for new owners.”</blockquote>
+      <p>The abstract also says rescues were seen as having a moral responsibility to give accurate information and pre- and post-adoption support, but that this was “inconsistently provided.”</p>
+      <p class="salt">These are stakeholder perceptions, not measured rates of problems. It is a UK study of importation. The paper states “This research was funded by DEFRA including the post of LW,” and says the funder had “no role in study design, data collection and analysis, or decision to publish.” Among other disclosures, one author reports consulting for MARS Petcare, Royal Canin, and Forthglade.</p>
+      <p class="floor">For a San Diego shelter the takeaway is narrow: the study's participants saw weak expectation-setting and follow-up as a problem. It says nothing about local adopter outcomes.</p>
+      <p class="src"><a href="https://doi.org/10.1371/journal.pone.0343416">doi.org/10.1371/journal.pone.0343416</a> · <a href="https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&rettype=abstract&retmode=text&id=42715163">PMID 42715163</a></p>
+    </article>
+
+    <article class="card">
+      <div class="chips"><span class="chip">Prospective cohort</span><span class="chip">n = 84 dogs</span><span class="chip">Client-owned, mean age 12.77 yrs</span><span class="chip">J Vet Intern Med · Sept 1</span><span class="chip">Open access · abstract read</span></div>
+      <h3>In aging dogs, soiling tracked cognitive test performance, not just urinary findings</h3>
+      <p>Rafatpanah Baigi et al. found soiling scores rose with age and fell with urine specific gravity. Higher soiling scores went with worse inhibitory-control and detour-task results. Abnormal urinalysis findings were less frequent than the authors expected.</p>
+      <blockquote>“Soiling behavior in aging dogs might not exclusively reflect urinary tract or systemic disease and could be an indicator of cognitive decline.”</blockquote>
+      <p class="salt">Owned dogs enrolled in an aging study, and the dementia rating scale (CADES) is owner-completed. These are associations only. No conflicts declared.</p>
+      <p class="floor">For a senior who is soiling in the kennel or foster, this is a reason to flag it to the vet as possibly cognitive as well as urinary. It's not a diagnosis.</p>
+      <p class="src"><a href="https://doi.org/10.1093/jvimsj/aalag208">doi.org/10.1093/jvimsj/aalag208</a> · <a href="https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&rettype=abstract&retmode=text&id=42806282">PMID 42806282</a></p>
+    </article>
+
+    <article class="card">
+      <div class="chips"><span class="chip">Between-groups experiment</span><span class="chip">n = 30 (15 + 15)</span><span class="chip">Owned dogs, Argentina</span><span class="chip">Behav Processes · Sept 14</span><span class="chip">Abstract only</span></div>
+      <h3>Owner presence dampened frustration behaviors during a food task</h3>
+      <blockquote>“Dogs were divided into two groups, one with the owner present (N = 15) and another with the owner absent (N = 15).”</blockquote>
+      <p>Dogs with the owner present showed lower frustration/stress behaviors than the owner-absent group. The abstract says the owner's presence “did not affect any of the variables associated with problem solving.”</p>
+      <p class="salt">15 per group, owned pets in a task setting. The effect involved the dog's own owner, so it says nothing about unfamiliar staff or volunteers. No conflicts declared.</p>
+      <p class="floor">Hedge hard: this doesn't show that a shelter handler can do the same for a dog who doesn't know them.</p>
+      <p class="src"><a href="https://doi.org/10.1016/j.beproc.2026.105439">doi.org/10.1016/j.beproc.2026.105439</a> · <a href="https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&rettype=abstract&retmode=text&id=42735840">PMID 42735840</a></p>
+    </article>
+
+    <article class="card">
+      <div class="chips"><span class="chip">Pilot comparison</span><span class="chip">n = 21 dogs (12 pit bull-type)</span><span class="chip">Taiwan</span><span class="chip">Animals · Sept 15</span><span class="chip">Open access · abstract read</span></div>
+      <h3>Two commercial DNA breed tests disagreed on pit bull-type labels</h3>
+      <blockquote>“substantial discordance was observed between the two services in the assignment of the American Pit Bull Terrier and American Staffordshire Terrier”</blockquote>
+      <p>Samples went to Embark and Orivet. The authors conclude commercial DNA breed identification needs more validation before it can support regulatory enforcement.</p>
+      <p class="salt">n = 21 and a pilot. It is framed around enforcement in Taiwan, not US shelter practice, and it measures agreement between tests, not behavior. No conflicts declared; the abstract doesn't say who funded the test kits.</p>
+      <p class="floor">Two tests disagreeing on the same dogs in a 21-dog pilot is the whole finding. It doesn't say which test, if either, is right.</p>
+      <p class="src"><a href="https://doi.org/10.3390/ani16182896">doi.org/10.3390/ani16182896</a> · <a href="https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&rettype=abstract&retmode=text&id=42791753">PMID 42791753</a></p>
+    </article>
+  </div>
+
+  <div class="context">
+    <h4>Just missed the window (published Aug 24)</h4>
+    <ul>
+      <li><b>Song, Animals, Aug 24:</b> a 10-year policy retrospective on contracted dog shelters in Korea. Only the title and abstract record were read. <a href="https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&rettype=abstract&retmode=text&id=42738446">PMID 42738446</a></li>
+      <li><b>Brand et al., Animals, Aug 24:</b> cost-of-living crisis and UK pandemic-puppy owners. Only the title and abstract record were read. <a href="https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&rettype=abstract&retmode=text&id=42738445">PMID 42738445</a></li>
+    </ul>
+  </div>
+</section>
+
+<section aria-labelledby="law">
+  <h2 id="law">California law</h2>
+  <p class="sec-note">Leginfo returned a bot-check page, so every status below comes from the governor's signing lists and CalMatters Digital Democracy instead. I found no other dog, shelter, or trainer bill on the lists I read.</p>
+  <div class="items">
+
+    <article class="card">
+      <div class="chips"><span class="chip">Signed Sept 14</span><span class="chip">Ch. 205</span><span class="chip out">Effective date not confirmed this run</span></div>
+      <h3>AB 1999 (Kalra): shelter veterinarian license and VCPR changes</h3>
+      <p>No. 0 mentioned this only in a context box. Digital Democracy's summary says the bill creates a shelter veterinarian license, adds retired and retired-volunteer statuses, revises the veterinarian-client-patient relationship rules, and permits rabies vaccination without an established client relationship. The governor's Sept 14 list shows it signed.</p>
+      <p class="salt">Digital Democracy's text is a summary, not the statute, and I couldn't open the leginfo digest or text. Chapter number and status come from Digital Democracy only. No. 0 gave an effective date of Jan 1, 2027 from leginfo; I couldn't re-confirm it this run. I did not read any commentary on the bill, so who supported it isn't covered here.</p>
+      <p class="floor">If it works as summarized, it may change who can treat and vaccinate in a shelter. Check the actual text before changing any workflow.</p>
+      <p class="src"><a href="https://calmatters.digitaldemocracy.org/bills/ca_202520260ab1999">Digital Democracy AB 1999</a> · <a href="https://www.gov.ca.gov/2026/09/14/governor-newsom-signs-legislation-9-14-2026/">Governor, Sept 14</a></p>
+    </article>
+  </div>
+
+  <div class="context">
+    <h4>Context: bills already covered in No. 0, re-checked</h4>
+    <ul>
+      <li><b>AB 2344 (Haney), seized animals.</b> The governor's Sept 27 list shows it signed, and Digital Democracy shows Sept 27, Ch. 599. I couldn't confirm the Jan 1, 2027 effective date or the 79–0 vote this run. <a href="https://www.gov.ca.gov/2026/09/27/governor-newsom-issues-legislative-update-9-27-2026/">Governor, Sept 27</a> · <a href="https://calmatters.digitaldemocracy.org/bills/ca_202520260ab2344">Digital Democracy</a></li>
+      <li><b>AB 2010 (Soria), spay/neuter surgical room.</b> Governor's Sept 18 list: signed. Digital Democracy: Ch. 284. Matches No. 0. <a href="https://www.gov.ca.gov/2026/09/18/governor-newsom-issues-legislative-update-9-18-26/">Governor, Sept 18</a> · <a href="https://calmatters.digitaldemocracy.org/bills/ca_202520260ab2010">Digital Democracy</a></li>
+      <li><b>SB 1296 (Durazo), pet policy disclosure.</b> Governor's Sept 30 list: signed. Digital Democracy: Ch. 1025, operative April 1, 2027. Matches No. 0. <a href="https://www.gov.ca.gov/2026/09/30/governor-newsom-issues-legislative-update-9-30-2026/">Governor, Sept 30</a> · <a href="https://calmatters.digitaldemocracy.org/bills/ca_202520260sb1296">Digital Democracy</a></li>
+    </ul>
+  </div>
+</section>
+
+<section aria-labelledby="local">
+  <h2 id="local">San Diego</h2>
+  <p class="sec-note">A thin month in the readable sources. No ordinances, disease outbreaks, or trainer events turned up, and the County's <a href="https://www.countynewscenter.com/topics/animals/">animals news page</a> showed no September 2026 items.</p>
+  <div class="items">
+
+    <article class="card">
+      <div class="chips"><span class="chip">SDHS own post</span><span class="chip">Sept 10</span></div>
+      <h3>SDHS traces a Maltipoo missing since 2023 back to his family through his microchip</h3>
+      <p>SDHS says Humane Law Enforcement officers found the dog, named Colby, abandoned at a San Diego safe sleeping site on Sept 8. His microchip showed he had been registered missing since Sept 27, 2023.</p>
+      <blockquote>“[M]icrochips work, but keeping contact details current and filing a missing pet report with your local shelter are just as essential.”</blockquote>
+      <p class="salt">This is the organization's own post, and a light story.</p>
+      <p class="floor">A reminder to scan every intake and to tell adopters to keep chip contact details current. Little else here for trainers.</p>
+      <p class="src"><a href="https://sdhumane.org/heartwarming-reunion-dog-missing-since-2023-reunited-with-family/">sdhumane.org</a></p>
+    </article>
+  </div>
+
+  <div class="context">
+    <h4>Context: after the window</h4>
+    <ul>
+      <li><b>County News Center, Oct 20:</b> the new $37M Santee shelter at 452 Riverview Parkway opened Oct 15, Bonita is permanently closed, and Carlsbad stays open. The release lists 85 dog kennels, eight activity yards, and isolation/quarantine rooms. Dr. Brie Sarvis, director of County Animal Services, is quoted: <i>“The improved housing, play yards and walking trails will make a huge difference in their daily lives.”</i> This is the County's own release. <a href="https://www.countynewscenter.com/county-opens-new-santee-animal-shelter-marking-major-upgrade-for-animal-care/">countynewscenter.com</a></li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  <h2>How this issue was made</h2>
+  <ul>
+    <li>No. 1 covers all of September 2026. It overlaps Sept 15–30 with the pilot, No. 0, so some topics repeat.</li>
+    <li>Research: PubMed searches by entry date for Sept 1–30, using the three runbook queries plus one extra shelter/rescue query, with abstracts read. Papers seen but not carded: a serum-lipid study in fearful dogs, an oral-microbiota resistance-gene study in Japanese shelter dogs, and several reviews.</li>
+    <li>Blocked or unread: ScienceDirect issue pages for Applied Animal Behaviour Science and Journal of Veterinary Behavior returned HTTP 403, so those journals aren't covered beyond PubMed. The Animal Cognition page wasn't readable. The IAABC Journal's newest listed issue is October 2026, outside the window.</li>
+    <li>Law: leginfo bill pages were blocked by a bot check and not bypassed. I read the governor's lists for Sept 14, 18, 20, 27, and 30 and Digital Democracy pages. Lists for other days were not read.</li>
+    <li>Local: the Axios (Sept 22) and CBS 8 (Sept 22) pages returned 403, and nothing from their search snippets is used here. Board of Supervisors agendas could not be retrieved. KPBS, Union-Tribune, NBC 7, 10News, Fox 5, Voice of San Diego, Hoodline, Patch, and other shelters' sites were searched but nothing in the window was found.</li>
+    <li>Stance: this newsletter doesn't take a side on training methods. It reports what each source says and flags who is saying it.</li>
+  </ul>
+</footer>
+</div>
+</body>
+</html>
